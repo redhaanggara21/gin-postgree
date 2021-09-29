@@ -12,10 +12,11 @@ import (
 
 type UserLoginEntity struct {
 	Name     string `gorm:"size:100;not null" json:"name" validate:"required"`
-	Email    string `gorm:"size:100;not null;unique_index" json:"email" validate:"required,email,unique"`
-	Nik      string `gorm:"size:100;not null;unique_index" json:"nik" validate:"required,unique"`
+	Email    string `gorm:"size:100;not null;unique_index" json:"email" validate:"required"`
+	Nik      string `gorm:"size:100;not null;unique_index" json:"nik" validate:"required"`
+	Nomor_hp string `gorm:"size:100;not null;unique_index" json:"nomor_hp" validate:"required"`
 	Password string `json:"password" validate:"required"`
-	IsActive bool   `json:"is_active" validate:"required" gorm:"default:false"`
+	IsActive bool   `gorm:"default:false" json:"is_active"`
 }
 
 type UserLoginEntityModel struct {
@@ -29,7 +30,6 @@ type UserLoginEntityModel struct {
 func (UserLoginEntityModel) TableName() string {
 	return "user"
 }
-
 func (m *UserLoginEntityModel) BeforeCreate(db *gorm.DB) error {
 	m.Password = util.HashPassword(m.Password)
 	m.CreatedAt = time.Now().Local()

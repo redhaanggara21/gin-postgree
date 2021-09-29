@@ -1,6 +1,7 @@
 package controllerAuth
 
 import (
+	"errors"
 	"pelatihan-be/internal/model"
 
 	"gorm.io/gorm"
@@ -9,6 +10,7 @@ import (
 type Repository interface {
 	Create(e *model.UserLoginEntity) (*model.UserLoginEntityModel, error)
 	FindByUsername(username *string) (*model.UserLoginEntityModel, error)
+	FindByParameter(parameter string, condisi string) (*model.UserLoginEntityModel, error)
 }
 
 type repository struct {
@@ -37,7 +39,16 @@ func (r *repository) Create(e *model.UserLoginEntity) (*model.UserLoginEntityMod
 func (r *repository) FindByUsername(username *string) (*model.UserLoginEntityModel, error) {
 
 	var data model.UserLoginEntityModel
-	err := r.db.Debug().Where("name = ? AND is_active = ? ", &username, true).First(&data).Error
+	err := r.db.Debug().Where("email = ?", &username).First(&data).Error
+	if err != nil {
+		return nil, errors.New("email belum terdaftar")
+	}
+	return &data, nil
+
+}
+func (r *repository) FindByParameter(parameter string, condisi string) (*model.UserLoginEntityModel, error) {
+	var data model.UserLoginEntityModel
+	err := r.db.Debug().Where(condisi, parameter).First(&data).Error
 	if err != nil {
 		return nil, err
 	}

@@ -26,8 +26,9 @@ func Connection() *gorm.DB {
 		logrus.Fatal(err.Error())
 	}
 
-	err = db.AutoMigrate(
+	err = db.Debug().AutoMigrate(
 		&model.UserLoginEntityModel{},
+		&model.KodeOtpEntityModel{},
 	)
 
 	if err != nil {

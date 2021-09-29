@@ -48,6 +48,7 @@ func SetupRouter() *gin.Engine {
 	}))
 
 	routes.InitAuthRoutes(db, r)
+	routes.InitTokenRoutes(db, r)
 
 	return r
 
